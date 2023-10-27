@@ -1,0 +1,66 @@
+{{form_start(f)}}
+{{form_label(f.ref)}}
+{{form_widget(f.ref)}}
+
+{{form_end(f)}}
+<h1>Book List</h1>
+<table border='3' class='center'>
+<tr>
+<td>ref</td>
+ <td>id_author</td>
+    
+        <td>title</td>
+            <td>category</td>
+            <td>publicationDate</td>
+            <td>published</td>
+             <td>Author</td>
+            
+            
+            
+
+
+               <td>Actions</td>
+               
+           
+
+            
+
+            </tr>
+            {%for a in book %}
+            <tr>
+            <td>{{a.ref}}</td>
+             <td>{{a.author.id}}</td>
+           
+        <td>{{a.title}}</td>
+            <td>{{a.category}}</td>
+            <td>{{a.publicationDate|date()}} </td>
+            <td> {{a.published}}</td>
+            <td> {{a.author.username}}</td>
+
+            <td> <a href="{{path('editBook',{'ref':a.ref})}}">edit 
+             <a href="{{path('deletbook',{'ref':a.ref})}}"> delete 
+             <a href="{{path('showbyidBook',{'ref':a.ref})}}"> show</td>
+
+
+           
+            </tr>
+            {%endfor%}
+
+</table>
+<p style="text-align:center">Number of Published Books: {{ publishedCount }}</p>
+<p style="text-align:center">Number of Unpublished Books: {{ unpublishedCount }}</p>
+
+<table class="center" cellspacing="3" cellpadding="5">
+    <tr>
+    <td><a href="{{ path('addformbook') }}"><p style="text-align:center">Add Book    </p></a></td>
+    <td><a href="{{ path('deleteZeroBooks') }}"><p style="text-align:center">Delete Authors with 0 books</p></a></td></tr>
+</table>
+    <style>
+        h1 {
+          text-align: center;
+        }
+        .center {
+  margin-left: auto;
+  margin-right: auto;
+}
+        </style>
