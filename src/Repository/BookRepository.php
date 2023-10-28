@@ -91,7 +91,7 @@ public function editw()
                 'SELECT book
                 FROM App\Entity\Book book
                 JOIN book.author author
-                where author.nb_books between :min  and :max
+                where author.nb_books between :minNumber  and :maxNumber
                 GROUP BY author.nb_books
             ');
     
