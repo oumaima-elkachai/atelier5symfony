@@ -8,6 +8,7 @@ use App\Entity\Book;
 use App\Entity\Author;
 use App\Form\BookType;
 use App\Form\Search2Type;
+use App\Form\MaxminNumberType;
 
 
 
@@ -119,18 +120,24 @@ class BookController extends AbstractController
        
         // Récupérez la liste des livres publiés
         $book = $bookRepository->findBy(['published' => true]);
+        $t=$bookRepository->sumCategory();
 
        $form=$this->createForm(Search2Type::class);
+     
        $form->handleRequest($req);
        if($form->isSubmitted()){
         $ref=$form->get('ref')->getData();
         $book= $bookRepository->search($ref);
-        $books= $bookRepository->trie($username = null);
+       
 
        }
          if ($book === null) {
             throw $this->createNotFoundException('Aucun Livre.');
         }
+
+        $book = $bookRepository->trie();
+        
+        
         
         $publishedCount = $bookRepository->count(['published' => true]);
         $unpublishedCount = $bookRepository->count(['published' => false]);
@@ -138,20 +145,91 @@ class BookController extends AbstractController
         return $this->renderForm('book/showdbbook.html.twig', [
             'book' => $book,
             'f'=>$form,
+            't'=>$t,
+
             
             
             'publishedCount' => $publishedCount,
             'unpublishedCount' => $unpublishedCount,
         ]);
         return $this->render('book/showdbbook.html.twig', [
-            'books' => $books,
+            'book' => $book,
+            't'=>$t,
+            
+            
             
             
             
             'publishedCount' => $publishedCount,
             'unpublishedCount' => $unpublishedCount,
         ]);
+
+        
+
+        
+       
     }
+
+    #[Route('/listcon', name: 'listcon')]
+    public function livrepub(BookRepository $bookRepository): Response
+    {
+        $books = $bookRepository->livrepub();
+
+        return $this->render('book/listcon.html.twig', [
+            'books' => $books,
+        ]);
+    }
+
+    #[Route('/editw', name: 'editw')]
+    public function editw(BookRepository $bookRepository, ManagerRegistry $managerRegistry)
+    {
+        $entityManager =$managerRegistry->getManager();
+
+        $x = $bookRepository->editw();
+
+        foreach (  $x  as $book) {
+            $book->setCategory('Romance');
+            $entityManager->persist($book);
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_showdbbook'); // Redirect to the list of books or another appropriate route
+    }
+
+    #[Route('/afficherliste', name: 'afficherliste')]
+    public function afficherliste(BookRepository $bookRepository)
+    {
+        $books = $bookRepository->afficherliste();
+
+        return $this->render('book/afficherliste.html.twig', [
+            'books' => $books,
+        ]);
+    }
+
+    #[Route('/tminmax', name: 'tminmax')]
+    #[Route('/minmaxNumber', name: 'minmaxNumber')]
+    public function minmax(Request $request, BookRepository $bookRepository): Response
+    {
+        $form = $this->createForm(MaxminNumberType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $minNumber = $data['minNumber'];
+            $maxNumber = $data['maxNumber'];
+
+            $books = $bookRepository->minmax($minNumber, $maxNumber);
+            return $this->render('book/tminmax.html.twig', [
+                'book' => $books,
+            ]);
+        }
+
+        return $this->renderForm('book/minmaxNumber.html.twig', [
+            'minmaxNumber' => $form,
+        ]);
+    }
+    
+
 
     #[Route('/deleteZeroBooks', name: 'deleteZeroBooks')]
     public function deleteZeroBooks(): Response
