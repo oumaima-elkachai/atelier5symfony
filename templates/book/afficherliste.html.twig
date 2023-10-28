@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of Books Published Between 2014 And 2018{% endblock %}
+
+{% block body %}
+    <h1>List of Books Published Between 2014 And 2018</h1>
+    <ul>
+        {% for book in books %}
+            <li>{{ book.title }} (Published on {{ book.publicationDate|date('Y-m-d') }})</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
