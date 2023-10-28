@@ -65,6 +65,15 @@ class AuthorRepository extends ServiceEntityRepository
        ->getResult();
     }
 
+    public function DeleteAuthor(){
+       { $b=$this->getEntityManager();
+        return $b
+        ->createQuery(
+            'DELETE App\Entity\Author a WHERE a.nb_books = 0')
+        ->getResult();
+       }
+    }
+
 //    /**
 //     * @return Author[] Returns an array of Author objects
 //     */

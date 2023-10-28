@@ -108,6 +108,12 @@ class AuthorController extends AbstractController
         ]);
     }
 
+    #[Route('/DeleteDQL', name:'DD')]
+    function DeleteDQL(AuthorRepository $repo){
+        $repo->DeleteAuthor();
+        return $this->redirectToRoute('app_showdb');
+    }
+
     #[Route('/showidauthor/{id}', name: 'showidauthor')]
     public function showidauthor($id,AuthorRepository $authorRepository): Response
     {$author=$authorRepository->showbyidauthor($id);
