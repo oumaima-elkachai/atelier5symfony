@@ -40,9 +40,9 @@ class AuthorRepository extends ServiceEntityRepository
 
     public function showbyidauthor($id)
     {return $this->createQueryBuilder('a')
-     ->join('a.books' , 'b')//books mtaa books.php win inver
+     ->join('a.books' , 'b')
      ->addSelect('b')
-     ->where('b.author=:id')//author many to one mtaa author.php
+     ->where('b.author=:id')
      ->setParameter('id',$id)
      ->getQuery()
      ->getResult();

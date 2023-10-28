@@ -23,8 +23,8 @@ class BookRepository extends ServiceEntityRepository
 
     public function search($ref)
     {
-        return $this->createQueryBuilder('ra')
-        ->where('ra.ref=:ref')
+        return $this->createQueryBuilder('c')
+        ->where('c.ref=:ref')
         ->setParameter('ref',$ref)
         ->getQuery()
         ->getResult();

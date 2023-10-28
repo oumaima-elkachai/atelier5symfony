@@ -170,18 +170,18 @@ class BookController extends AbstractController
        
     }
 
-    #[Route('/listcon', name: 'listcon')]
-    public function livrepub(BookRepository $bookRepository): Response
+    #[Route('/list', name: 'list')]
+    public function list(BookRepository $bookRepository): Response
     {
         $books = $bookRepository->livrepub();
 
-        return $this->render('book/listcon.html.twig', [
+        return $this->render('book/list.html.twig', [
             'books' => $books,
         ]);
     }
 
-    #[Route('/editw', name: 'editw')]
-    public function editw(BookRepository $bookRepository, ManagerRegistry $managerRegistry)
+    #[Route('/ediit', name: 'ediit')]
+    public function ediit(BookRepository $bookRepository, ManagerRegistry $managerRegistry)
     {
         $entityManager =$managerRegistry->getManager();
 
@@ -207,7 +207,7 @@ class BookController extends AbstractController
         ]);
     }
 
-    #[Route('/tminmax', name: 'tminmax')]
+    #[Route('/minmax', name: 'minmax')]
     #[Route('/minmaxNumber', name: 'minmaxNumber')]
     public function minmax(Request $request, BookRepository $bookRepository): Response
     {
@@ -219,7 +219,7 @@ class BookController extends AbstractController
             $maxNumber = $data['maxNumber'];
 
             $books = $bookRepository->minmax($minNumber, $maxNumber);
-            return $this->render('book/tminmax.html.twig', [
+            return $this->render('book/minmax.html.twig', [
                 'book' => $books,
             ]);
         }
@@ -231,29 +231,6 @@ class BookController extends AbstractController
     
 
 
-    #[Route('/deleteZeroBooks', name: 'deleteZeroBooks')]
-    public function deleteZeroBooks(): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $authorRepository = $entityManager->getRepository(Author::class);
-        $bookRepository = $entityManager->getRepository(Book::class);
-
-        // Récupérer la liste des auteurs avec nb_books égal à zéro
-        $authorsToDelete = $authorRepository->findBy(['nb_books' => 0]);
-
-        foreach ($authorsToDelete as $author) {
-            // Retrieve the associated books
-            $books = $bookRepository->findBy(['author' => $author]);
-
-            foreach ($books as $book) {
-                $entityManager->remove($book);
-            }
-
-            $entityManager->remove($author);
-        }
-
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_showdbbook');
-    }
+   
+    
 }
