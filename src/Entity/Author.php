@@ -24,7 +24,7 @@ class Author
     #[ORM\Column]
     private ?int $nb_books = null;
 
-    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Book::class/*,cascade:["all"],orphanRemoval:true*/)]
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Book::class,cascade:["all"],orphanRemoval:true)]
     private Collection $books;
 
     public function __construct()
